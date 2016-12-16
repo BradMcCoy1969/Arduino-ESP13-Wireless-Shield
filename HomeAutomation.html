@@ -1,0 +1,41 @@
+<HTML>
+<HEAD>
+<link rel="stylesheet" type="text/css" href="../MyStyle.css" />
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<script Language="JavaScript">
+
+function ReadSensor1(){
+  document.getElementById("Sensor1Results").innerHTML = "Reading Sensor...";
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {  //4 = DONE   
+      document.getElementById("Sensor1Results").innerHTML = xhttp.responseText;
+    }
+  };
+  xhttp.open("GET", "http://216.16.114.237:1969/SensorData", true);
+  xhttp.send();
+}
+
+</script>
+<meta name='viewport' content='width=device-width, initial-scale=.5'>
+<META Name='keywords' Content='Internet Home automation'>
+</HEAD>
+
+<body>
+<div STYLE='position:absolute; left:10px; top:1px; width:95%; height:50px; background-color:Antiquewhite; border:0px solid black;'>
+</div>
+
+<div STYLE='position:absolute; left:10px; top:61px; width:100px; height:500px; background-color:Antiquewhite; border:0px solid black;'>
+<input name='cmdReadSensor1' type='button' onClick='ReadSensor1()' value='Read Sensor 1' style='position:absolute; left:1px; top:1px; height:46px; width:90px'></input>
+
+</div>
+
+<div STYLE='position:absolute; left:115px; top:61px; width:200px; height:500px; background-color:Antiquewhite; border:0px solid black;'>
+<div id='Sensor1Results' STYLE='position:absolute; left:1px; top:1px; width:196px; height:46px; background-color:Antiquewhite; border:0px solid black;'></div>
+
+</div>
+
+
+
+</body>
+</html>
