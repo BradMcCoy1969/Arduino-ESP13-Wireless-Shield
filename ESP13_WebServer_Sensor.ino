@@ -1,7 +1,11 @@
+#include <SimpleDHT.h>
+
 class BradMcCoy1969_WebServer{
   public:
   String inputString = ""; 
   String Message="";
+  int pinDHT11 = 7;
+  SimpleDHT11 dht11;
     
   BradMcCoy1969_WebServer(){
     inputString.reserve(200);
@@ -12,6 +16,7 @@ class BradMcCoy1969_WebServer{
       inputString += Serial.readString();
     }
     if (inputString.length() > 0){
+      Message = readDHTSensor();
       handleRequest(inputString);
       inputString = "";
     }
@@ -106,13 +111,27 @@ class BradMcCoy1969_WebServer{
     StatusLine += "\n\r";    
     return StatusLine;
   }
+
+  String readDHTSensor(){
+    // read with raw sample data.
+    String Results="";
+    byte temperature = 0;
+    byte humidity = 0;
+    byte data[40] = {0};
+    if (dht11.read(pinDHT11, &temperature, &humidity, data)) {
+      return "Read DHT11 failed";
+    }
+    
+    Results = (int)(temperature*9/5 + 32);
+    Results += " F, ";
+    Results.concat((int)humidity);
+    Results += " %";  
+    return Results;
+  }  
 };
 
 //-----------------------------------------------------------------------
-#include <SimpleDHT.h>
 
-int pinDHT11 = 7;
-SimpleDHT11 dht11;
 BradMcCoy1969_WebServer MyWebServer;
 
 void setup() {
@@ -120,27 +139,6 @@ void setup() {
 }
 
 void loop() {
-  MyWebServer.Message = readDHTSensor();
   MyWebServer.handleClient();
   delay(100);
 }
-
-String readDHTSensor(){
-  // read with raw sample data.
-  String Results="";
-  byte temperature = 0;
-  byte humidity = 0;
-  byte data[40] = {0};
-  if (dht11.read(pinDHT11, &temperature, &humidity, data)) {
-    return "Read DHT11 failed";
-  }
-  
-//  Serial.print("Sample OK: ");
-  Results = (int)(temperature*9/5 + 32);
-  Results += " F, ";
-  Results.concat((int)humidity);
-  Results += " %";  
-  return Results;
-}
-
-
